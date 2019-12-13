@@ -39,7 +39,7 @@ for db in "${DBS[@]}"; do
     pg_dump -Fc -h $PG_HOST -U $PG_USER -p $PG_PORT $db > /tmp/"$FILENAME".dump
 
     # Copy to S3
-    aws s3 cp /tmp/"$FILENAME".dump s3://$S3_PATH/"$FILENAME".dump --storage-class STANDARD_IA
+    s3cmd put /tmp/"$FILENAME".dump s3://$S3_PATH/"$FILENAME".dump --storage-class STANDARD_IA
 
     # Delete local file
     rm /tmp/"$FILENAME".dump
@@ -52,7 +52,7 @@ done
 echo " * Deleting old backups...";
 
 # Loop thru files
-aws s3 ls s3://$S3_PATH/ | while read -r line;  do
+s3cmd ls s3://$S3_PATH/ | while read -r line;  do
     # Get file creation date
     createDate=`echo $line|awk {'print $1" "$2'}`
     createDate=`date -d"$createDate" +%s`
@@ -64,7 +64,7 @@ aws s3 ls s3://$S3_PATH/ | while read -r line;  do
         if [[ $FILENAME != "" ]]
           then
             echo "   -> Deleting $FILENAME"
-            aws s3 rm s3://$S3_PATH/$FILENAME
+            s3cmd rm s3://$S3_PATH/$FILENAME
         fi
     fi
 done;
