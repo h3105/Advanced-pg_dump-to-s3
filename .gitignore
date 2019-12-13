@@ -1,5 +1,3 @@
-# Config file
-pg_dump-to-s3.conf
 
 # Mac
 .DS_Store
