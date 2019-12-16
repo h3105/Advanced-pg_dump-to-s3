@@ -25,6 +25,7 @@ for db in "${DBS[@]}"; do
     pg_dump -Fc -w -h $PG_HOST -U $PG_USER -p $PG_PORT $db > /tmp/"$FILENAME".dump
     if [ ! "$?" = 0 ]; then
         echo "DB-Connection didn't work... Aborting."
+        touch ./.dump.ERROR
         exit
     fi
 
@@ -33,6 +34,11 @@ for db in "${DBS[@]}"; do
 
     # Delete local file
     rm /tmp/"$FILENAME".dump
+
+    if [ -f ./.dump.ERROR ]; then
+        rm ./.dump.ERROR
+    fi    
+    touch ./.dump.SUCCESS
 
     # Log
     echo "      ...database $db has been backed up"
