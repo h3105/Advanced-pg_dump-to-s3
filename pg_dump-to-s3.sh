@@ -1,5 +1,14 @@
 #!/bin/bash
 
+############################### FUNCTIONS
+# Delete local file
+delfiles()
+{
+    rm /tmp/"$FILENAME".dump
+}
+
+###########################################
+
 echo "Set current directory"
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -39,11 +48,7 @@ for db in "${DBS[@]}"; do
         exit
     fi    
 
-    # Delete local file
-    delfiles()
-    {
-        rm /tmp/"$FILENAME".dump
-    }
+ 
 
     if [ -f ./.s3.ERROR || ./.db.ERROR ]; then
         rm ./*.ERROR
