@@ -25,18 +25,24 @@ for db in "${DBS[@]}"; do
     pg_dump -Fc -w -h $PG_HOST -U $PG_USER -p $PG_PORT $db > /tmp/"$FILENAME".dump
     if [ ! "$?" = 0 ]; then
         echo "DB-Connection didn't work... Aborting."
-        touch ./.ERROR
+        touch ./.db.ERROR
         exit
     fi
 
     # Copy to S3
     s3cmd put /tmp/"$FILENAME".dump s3://$S3_PATH"_"$NOW/"$FILENAME".dump --storage-class STANDARD_IA
+    if [ ! "$?" = 0]; then
+        echo "Couldn't upload to S3 Storage... please Check .s3cfg File and/or Storage Path.."
+        echo "Aborting.."
+        touch ./.s3.ERROR
+        exit
+    fi    
 
     # Delete local file
     rm /tmp/"$FILENAME".dump
 
-    if [ -f ./.ERROR ]; then
-        rm ./.ERROR
+    if [ -f ./.s3.ERROR || ./.db.ERROR ]; then
+        rm ./*.ERROR
     fi    
     touch ./.SUCCESS
 
