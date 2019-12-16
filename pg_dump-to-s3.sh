@@ -34,12 +34,16 @@ for db in "${DBS[@]}"; do
     if [ ! "$?" = 0 ]; then
         echo "Couldn't upload to S3 Storage... please Check .s3cfg File and/or Storage Path.."
         echo "Aborting.."
+        delfiles
         touch ./.s3.ERROR
         exit
     fi    
 
     # Delete local file
-    rm /tmp/"$FILENAME".dump
+    delfiles()
+    {
+        rm /tmp/"$FILENAME".dump
+    }
 
     if [ -f ./.s3.ERROR || ./.db.ERROR ]; then
         rm ./*.ERROR
