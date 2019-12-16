@@ -31,7 +31,7 @@ for db in "${DBS[@]}"; do
 
     # Copy to S3
     s3cmd put /tmp/"$FILENAME".dump s3://$S3_PATH"_"$NOW/"$FILENAME".dump --storage-class STANDARD_IA
-    if [ ! "$?" = 0]; then
+    if [ ! "$?" = 0 ]; then
         echo "Couldn't upload to S3 Storage... please Check .s3cfg File and/or Storage Path.."
         echo "Aborting.."
         touch ./.s3.ERROR
