@@ -53,7 +53,14 @@ for db in "${DBS[@]}"; do
     if [ -f ./.s3.ERROR || ./.db.ERROR ]; then
         rm ./*.ERROR
     fi    
-    touch ./.SUCCESS
+
+    ##### Optional Sync to other bucket ########
+    if [ "$MULTIBUCKET" = 1 ]; then
+        s3cmd sync s3://$S3_PATH/ s3://$S3_REP_PATH/
+        if [ ! "$?" = 0 ]; then
+            echo "ERROR: Bucket '$S3_PATH' couldn't be synchronized with Bucket '$S3_REP_PATH'. Manual Check Required.."
+        fi
+    fi
 
     # Log
     echo "      ...database $db has been backed up"
