@@ -61,7 +61,8 @@ for db in "${DBS[@]}"; do
             echo "ERROR: Bucket '$S3_PATH' couldn't be synchronized with Bucket '$S3_REP_PATH'. Manual Check Required.."
         fi
     fi
-
+    ###############################################
+    
     # Log
     echo "      ...database $db has been backed up"
 done
